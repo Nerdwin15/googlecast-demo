@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Slide Receiver</title>
+  <script type="text/javascript" src="//code.jquery.com/jquery.min.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/cast/js/receiver/1.0/cast_receiver.js"></script>
+  <script type="text/javascript">
+    var receiver = new cast.receiver.Receiver(
+      'ae74f905-cb76-4901-b7f2-029979261463'
+    );
+
+    var onMessage = function(event) {
+      var message = event.message;
+      if (message.type == 'message')
+        $("#message").html("Got: <span class='message'>" + message.text + "</span>");
+      if (message.type == "color")
+        $("body").css("backgroundColor", message.color);
+    };
+
+    channelHandler = new cast.receiver.ChannelHandler('com.nerdwin15.demo');
+    channelHandler.addEventListener(cast.receiver.Channel.EventType.MESSAGE, onMessage.bind(this));
+    channelHandler.addChannelFactory(receiver.createChannelFactory("com.nerdwin15.demo"));
+
+    receiver.start();
+    
+    window.addEventListener('load', function() {
+      $("#message").text("Loaded!");
+    });
+  </script>
+  <style type="text/css">
+    body { background-color: #e0e0e0; }
+    #message { 
+      text-align: center;
+      font-weight: bold;
+      font-size: 100px;
+      position: absolute;
+      width: 90%;
+      top: 50%;
+      left: 5%;
+      margin-top: -50px;
+      line-height: 1em;
+    }
+    .message {
+      color: #006;
+    }
+  </style>
+</head>
+<body>
+  <div id="message"></div>
+</body>
+</html>
